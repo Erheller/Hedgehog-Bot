@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import discord
 import asyncio
 import random
@@ -44,6 +46,29 @@ lottery_list = [
     'http://vignette4.wikia.nocookie.net/bakemonogatari1645/images/7/7c/Owari_kanbaru_2.png/revision/latest?cb=20170106045235'
 ]
 
+async def help_cmd(message):
+    channel = message.channel
+    help_message = """Hedgehog isn't very good yet, but it will do its best!
+    **Commands:**
+    __hedgehog help__ - *I'll display a list of commands!*
+    __tell me a story__ - *I'm bad a telling stories...*
+    __ping__ - *Pong!*
+    __rip [@User]__ - *Rest in peace :(*
+    __anichart [season]__ - *I'll pull up the anichart animu list for that season.*
+    __bestgirl__ - *Have a randomly-selected best girl picture! Some of them aren't actually best girls though...*
+    __waifuwar__ - *Let the Monogatari waifu war begin!*
+    """
+    
+    await client.send_message(channel, help_message)
+    
+
+
+
+
+
+
+
+
 
 
 
@@ -63,11 +88,11 @@ async def on_ready():
 @client.event
 async def on_message(message):
     # ping pong
-    if message.content.startswith('!ping'):
+    if message.content.startswith('ping'):
        await client.send_message(message.channel, 'Pong!')
        
     # tell me a story
-    if message.content.startswith('tell me a story'):
+    if message.content.startswith('tell me a story'.lower()):
         string_list = ['No.', 'Negative.', "I'm not fucking doing that.", 'Denied.', 'Noooooooo', "Noooo no no no no no", 'Negevative']
         await client.send_message(message.channel, random.choice(string_list), tts=True)
     if message.content.startswith('who is the king of sighs'):
@@ -125,8 +150,17 @@ async def on_message(message):
     # waifu lottery
     if message.content.startswith('waifuwar' or 'waifu war'):
         await client.send_message(message.channel, random.choice(lottery_list))
-client.run('MzQxNDY5MzE5MDg5MDk0NjY2.DGBksw.rDrbsYhlncj7Zqb6oU4TiDcBnb8')
+        
+    # help
+    if message.content.startswith('hedgehog help'):
+        await help_cmd(message)
 
+        
+        
+        
+        
+client.run('MzQxNDY5MzE5MDg5MDk0NjY2.DGBksw.rDrbsYhlncj7Zqb6oU4TiDcBnb8')
+    
 
 
 
