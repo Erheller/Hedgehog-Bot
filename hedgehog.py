@@ -7,6 +7,7 @@ import re
 
 client = discord.Client()
 
+# some ugly dicts and lists incoming
 # rip dict
 rip_dict = {
     0:                  'https://my.mixtape.moe/cmrzfq.png',    # Default
@@ -46,12 +47,13 @@ lottery_list = [
     'http://vignette4.wikia.nocookie.net/bakemonogatari1645/images/7/7c/Owari_kanbaru_2.png/revision/latest?cb=20170106045235'
 ]
 
+# help command
 async def help_cmd(message):
     channel = message.channel
     help_message = """Hedgehog isn't very good yet, but it will do its best!
     **Commands:**
     __hedgehog help__ - *I'll display a list of commands!*
-    __tell me a story__ - *I'm bad a telling stories...*
+    __tell me a story__ - *I probably won't.*
     __ping__ - *Pong!*
     __rip [@User]__ - *Rest in peace :(*
     __anichart [season]__ - *I'll pull up the anichart animu list for that season.*
@@ -88,20 +90,22 @@ async def on_ready():
 @client.event
 async def on_message(message):
     # ping pong
-    if message.content.startswith('ping'):
+    if message.content.lower().startswith('ping'):
        await client.send_message(message.channel, 'Pong!')
        
     # tell me a story
-    if message.content.startswith('tell me a story'.lower()):
+    elif message.content.lower().startswith('tell me a story'.lower()):
         string_list = ['No.', 'Negative.', "I'm not fucking doing that.", 'Denied.', 'Noooooooo', "Noooo no no no no no", 'Negevative']
         await client.send_message(message.channel, random.choice(string_list), tts=True)
-    if message.content.startswith('who is the king of sighs'):
+    
+    # stupid joke
+    elif message.content.lower().startswith('who is the king of sighs'):
         await client.send_message(message.channel, "Kyle")
 
         
         
     # rip
-    if message.content.startswith('rip'):
+    elif message.content.lower().startswith('rip'):
         if message.mentions:                # check to see if there are any mentions
             user = message.mentions[0]      # grab the mentioned user
             #print(user.id)
@@ -118,7 +122,7 @@ async def on_message(message):
        
 
     # anichart
-    if message.content.startswith('anichart'):
+    elif message.content.lower().startswith('anichart'):
         str_list = message.content.split()
         for word in str_list:
             if word.lower() == 'spring':
@@ -133,7 +137,7 @@ async def on_message(message):
                 await client.send_message(message.channel, 'http://image.anichart.net/i/Winter.jpg')
                 
     # userinfo
-    if message.content.startswith('userinfo'):
+    elif message.content.lower().startswith('userinfo'):
         if message.mentions:
             user = message.mentions[0]
             await client.send_message(message.channel, user.mention)
@@ -144,15 +148,15 @@ async def on_message(message):
             
             
     # bestgirl
-    if message.content.startswith('bestgirl'):
+    elif message.content.lower().startswith('bestgirl'):
         await client.send_message(message.channel, random.choice(best_girl_list))
         
     # waifu lottery
-    if message.content.startswith('waifuwar' or 'waifu war'):
+    elif message.content.lower().startswith('waifuwar' or 'waifu war'):
         await client.send_message(message.channel, random.choice(lottery_list))
         
     # help
-    if message.content.startswith('hedgehog help'):
+    elif message.content.lower().startswith('hedgehog help'):
         await help_cmd(message)
 
         
