@@ -72,14 +72,16 @@ async def help_cmd(message):
 
 async def rip_cmd(message):
     global rip_message
+    global rip_count
     
     if message.mentions:                # check to see if there are any mentions
         user = message.mentions[0]      # grab the mentioned user
+        rip_count = 0
         if int(user.id) in rip_dict:    # customized rip picture
             rip_message = await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '.\n' + rip_dict[int(user.id)] )
         else:                           # default rip picture
             rip_message = await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '.\n' + rip_dict[0] )
-            
+                        
             
 # Notes:
 # If someone has been ripped at, pressing f will add a counter to that rip.
@@ -99,7 +101,6 @@ async def f_cmd(message):
         else:                   # already a counter at 1 or higher
             rip_count += 1
             rip_split = rip_message.content.split('\n')
-            print(rip_split)
             final_string = rip_split[0] + '\n' + str(rip_count) + ' respects paid.\n' + rip_split[1]
             await client.edit_message(rip_message, final_string)
 
