@@ -51,6 +51,9 @@ lottery_list = [
 
 story_list = ['No.', 'Negative.', "I'm not fucking doing that.", 'Denied.', 'Noooooooo', "Noooo no no no no no", 'Negevative']
 
+rip_message = None
+rip_count = 0
+
 # various text commands
 async def help_cmd(message):
     channel = message.channel
@@ -68,13 +71,40 @@ async def help_cmd(message):
     
 
 async def rip_cmd(message):
+    global rip_message
+    
     if message.mentions:                # check to see if there are any mentions
         user = message.mentions[0]      # grab the mentioned user
         if int(user.id) in rip_dict:    # customized rip picture
-            await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '\n' + rip_dict[int(user.id)] )
+            rip_message = await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '.\n' + rip_dict[int(user.id)] )
         else:                           # default rip picture
-            await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '\n' + rip_dict[0] )
+            rip_message = await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '.\n' + rip_dict[0] )
+            
+            
+# Notes:
+# If someone has been ripped at, pressing f will add a counter to that rip.
+# Resets every time the bot restarts
+
+async def f_cmd(message):
+    global rip_message
+    global rip_count
     
+    print(rip_message.content)
+    if rip_message:
+        if rip_count == 0:      # no counter
+            rip_split = rip_message.content.split('\n')
+            final_string = rip_split[0] + '\n1 respect paid.\n' + rip_split[1]
+            await client.edit_message(rip_message, final_string)
+            rip_count = 1
+        else:                   # already a counter at 1 or higher
+            rip_count += 1
+            rip_split = rip_message.content.split('\n')
+            print(rip_split)
+            final_string = rip_split[0] + '\n' + str(rip_count) + ' respects paid.\n' + rip_split[1]
+            await client.edit_message(rip_message, final_string)
+
+
+
 async def anichart_cmd(message):
     str_list = message.content.split()
     for word in str_list:
@@ -93,7 +123,7 @@ async def story_cmd(message):
     await client.send_message(message.channel, random.choice(story_list), tts=True)
     
 async def ping_cmd(message):
-    d = datetime.utcnow() - message.timestamp
+    d = datetime.utcnow() - message.timestamp   # timedelta object
     s = d.seconds*1000 + d.microseconds//1000
     await client.send_message(message.channel, "Pong!\n({} ms)".format(s))
     
@@ -138,6 +168,10 @@ async def on_message(message):
     # rip
     elif message.content.lower().startswith('rip'):
         await rip_cmd(message)
+        
+    # people pressing f to pay respects
+    elif message.content.lower() == 'f':
+        await f_cmd(message)
 
     # anichart
     elif message.content.lower().startswith('anichart'):
