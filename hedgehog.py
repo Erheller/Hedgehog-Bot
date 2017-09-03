@@ -63,6 +63,7 @@ async def help_cmd(message):
     __tell me a story__ - *I probably won't.*
     __ping__ - *Pong!*
     __rip [@User]__ - *Rest in peace :(*
+    __f__ - *Pay respects to a RIP'd user*
     __anichart [season]__ - *I'll pull up the anichart animu list for that season.*
     __bestgirl__ - *Have a randomly-selected best girl picture! Some of them aren't actually best girls though...*
     __waifuwar__ - *Let the Monogatari waifu war begin!*
