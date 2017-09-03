@@ -92,7 +92,6 @@ async def f_cmd(message):
     global rip_message
     global rip_count
     
-    print(rip_message.content)
     if rip_message:
         if rip_count == 0:      # no counter
             rip_split = rip_message.content.split('\n')
@@ -104,6 +103,7 @@ async def f_cmd(message):
             rip_split = rip_message.content.split('\n')
             final_string = rip_split[0] + '\n' + str(rip_count) + ' respects paid.\n' + rip_split[1]
             await client.edit_message(rip_message, final_string)
+        await client.delete_message(message)
 
 
 
