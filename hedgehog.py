@@ -3,7 +3,9 @@
 import discord
 import asyncio
 import random
-import re
+from datetime import datetime
+from datetime import datetime,timedelta
+
 
 client = discord.Client()
 
@@ -89,6 +91,12 @@ async def anichart_cmd(message):
 
 async def story_cmd(message):
     await client.send_message(message.channel, random.choice(story_list), tts=True)
+    
+async def ping_cmd(message):
+    d = datetime.utcnow() - message.timestamp
+    s = d.seconds*1000 + d.microseconds//1000
+    await client.send_message(message.channel, "Pong!\n({} ms)".format(s))
+    
 
 # used for debugging
 async def debug_userinfo(message):
@@ -116,7 +124,8 @@ async def on_ready():
 async def on_message(message):
     # ping pong
     if message.content.lower().startswith('ping'):
-       await client.send_message(message.channel, 'Pong!')
+       #await client.send_message(message.channel, 'Pong!')
+       await ping_cmd(message)
        
     # tell me a story
     elif message.content.lower().startswith('tell me a story'.lower()):
