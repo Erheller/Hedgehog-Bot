@@ -47,7 +47,9 @@ lottery_list = [
     'http://vignette4.wikia.nocookie.net/bakemonogatari1645/images/7/7c/Owari_kanbaru_2.png/revision/latest?cb=20170106045235'
 ]
 
-# help command
+story_list = ['No.', 'Negative.', "I'm not fucking doing that.", 'Denied.', 'Noooooooo', "Noooo no no no no no", 'Negevative']
+
+# various text commands
 async def help_cmd(message):
     channel = message.channel
     help_message = """Hedgehog isn't very good yet, but it will do its best!
@@ -60,29 +62,52 @@ async def help_cmd(message):
     __bestgirl__ - *Have a randomly-selected best girl picture! Some of them aren't actually best girls though...*
     __waifuwar__ - *Let the Monogatari waifu war begin!*
     """
-    
     await client.send_message(channel, help_message)
     
 
+async def rip_cmd(message):
+    if message.mentions:                # check to see if there are any mentions
+        user = message.mentions[0]      # grab the mentioned user
+        if int(user.id) in rip_dict:    # customized rip picture
+            await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '\n' + rip_dict[int(user.id)] )
+        else:                           # default rip picture
+            await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '\n' + rip_dict[0] )
+    
+async def anichart_cmd(message):
+    str_list = message.content.split()
+    for word in str_list:
+        if word.lower() == 'spring':
+            await client.send_message(message.channel, 'http://image.anichart.net/i/Spring.jpg')
+        if word.lower() == 'summer':
+            await client.send_message(message.channel, 'http://image.anichart.net/i/Summer.jpg')
+        if word.lower() == 'fall':
+            await client.send_message(message.channel, 'http://image.anichart.net/i/Fall.jpg')
+        if word.lower() == 'autumn':
+            await client.send_message(message.channel, 'http://image.anichart.net/i/Fall.jpg')
+        if word.lower() == 'winter':
+            await client.send_message(message.channel, 'http://image.anichart.net/i/Winter.jpg')
 
+async def story_cmd(message):
+    await client.send_message(message.channel, random.choice(story_list), tts=True)
 
+# used for debugging
+async def debug_userinfo(message):
+    if message.mentions:
+        user = message.mentions[0]
+        await client.send_message(message.channel, user.mention)
+        await client.send_message(message.channel, user.name)
+        await client.send_message(message.channel, user.id)
+        await client.send_message(message.channel, user.discriminator)
+        await client.send_message(message.channel, user.avatar)
 
-
-
-
-
-
-
-
+# Ready for the bot to make its appearance!
 @client.event
 async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print("ID:", client.user.id)
     print('------')
-	
     current_game = discord.Game(name='with a ball of twine')
-    
     await client.change_presence(game=current_game, status=None)
 
     
@@ -95,57 +120,23 @@ async def on_message(message):
        
     # tell me a story
     elif message.content.lower().startswith('tell me a story'.lower()):
-        string_list = ['No.', 'Negative.', "I'm not fucking doing that.", 'Denied.', 'Noooooooo', "Noooo no no no no no", 'Negevative']
-        await client.send_message(message.channel, random.choice(string_list), tts=True)
+        await story_cmd(message)
     
     # stupid joke
     elif message.content.lower().startswith('who is the king of sighs'):
         await client.send_message(message.channel, "Kyle")
-
-        
         
     # rip
     elif message.content.lower().startswith('rip'):
-        if message.mentions:                # check to see if there are any mentions
-            user = message.mentions[0]      # grab the mentioned user
-            #print(user.id)
-            #print(rip_dict[int(user.id)])
-            #print(rip_dict[user.id])
-            
-            if int(user.id) in rip_dict:         # customized rip picture
-                await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '\n' + rip_dict[int(user.id)] )
-                #print("customized")
-
-            else:                           # default rip picture
-                await client.send_message(message.channel, 'Press F to pay respects to ' + user.mention + '\n' + rip_dict[0] )
-                #print("Default")
-       
+        await rip_cmd(message)
 
     # anichart
     elif message.content.lower().startswith('anichart'):
-        str_list = message.content.split()
-        for word in str_list:
-            if word.lower() == 'spring':
-                await client.send_message(message.channel, 'http://image.anichart.net/i/Spring.jpg')
-            if word.lower() == 'summer':
-                await client.send_message(message.channel, 'http://image.anichart.net/i/Summer.jpg')
-            if word.lower() == 'fall':
-                await client.send_message(message.channel, 'http://image.anichart.net/i/Fall.jpg')
-            if word.lower() == 'autumn':
-                await client.send_message(message.channel, 'http://image.anichart.net/i/Fall.jpg')
-            if word.lower() == 'winter':
-                await client.send_message(message.channel, 'http://image.anichart.net/i/Winter.jpg')
+        await anichart_cmd(message)
                 
     # userinfo
     elif message.content.lower().startswith('userinfo'):
-        if message.mentions:
-            user = message.mentions[0]
-            await client.send_message(message.channel, user.mention)
-            await client.send_message(message.channel, user.name)
-            await client.send_message(message.channel, user.id)
-            await client.send_message(message.channel, user.discriminator)
-            await client.send_message(message.channel, user.avatar)
-            
+        await debug_userinfo(message)
             
     # bestgirl
     elif message.content.lower().startswith('bestgirl'):
