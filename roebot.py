@@ -59,7 +59,7 @@ rip_count = 0
 # various text commands
 async def help_cmd(message):
     channel = message.channel
-    help_message = """Hedgehog isn't very good yet, but it will do its best!
+    help_message = """.
     **Commands:**
     __hedgehog help__ - *I'll display a list of commands!*
     __tell me a story__ - *I probably won't.*
