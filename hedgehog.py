@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# For this bot to work, create a text file called 'token.txt', place it in this script's directory, and paste your Discord bot token inside.
+
 import discord
 import asyncio
 import random
@@ -195,11 +197,14 @@ async def on_message(message):
     elif message.content.lower().startswith('hedgehog help'):
         await help_cmd(message)
 
-        
-        
-        
-        
-client.run('blah')
+
+
+# open token.txt
+with open('token.txt', 'r') as f:
+    token = f.readline()
+    token = token.strip()
+
+client.run(token)
     
 
 
