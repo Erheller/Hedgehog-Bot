@@ -5,9 +5,12 @@
 import discord
 import asyncio
 import random
+import os
 from datetime import datetime
 from datetime import datetime,timedelta
 
+from opus_loader import load_opus_lib
+load_opus_lib()
 
 client = discord.Client()
 
@@ -131,7 +134,18 @@ async def ping_cmd(message):
     s = d.seconds*1000 + d.microseconds//1000
     await client.send_message(message.channel, "Pong!\n({} ms)".format(s))
     
-
+async def play_song(message):
+    # will be a Member under most circumstances; will be a user in private channels, which is a no-no
+    author = message.author
+    # if the author is not a Member (is a User), don't do anything because insufficient information
+    if type(author) is discord.Member:
+        channel = author.voice.voice_channel
+        if (channel != None):
+            voice = await client.join_voice_channel(channel)
+            player = voice.create_ffmpeg_player('SUNSHINE_COASTLINE.mp3')
+            player.start()
+        
+    
 # used for debugging
 async def debug_userinfo(message):
     if message.mentions:
@@ -197,7 +211,9 @@ async def on_message(message):
     elif message.content.lower().startswith('hedgehog help'):
         await help_cmd(message)
 
-
+    # temp music command
+    elif message.content.lower().startswith('roeplay'):
+        await play_song(message)
 
 # open token.txt
 with open('token.txt', 'r') as f:
